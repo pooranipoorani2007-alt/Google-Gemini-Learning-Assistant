@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>EduGenie - Learning Assistant</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #5b4bc4;
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            outline: none;
+        }
+
+        select:focus,
+        input:focus {
+            border-color: #667eea;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            border: none;
+            padding: 14px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .ask-btn {
+            flex: 1;
+            background: #5b4bc4;
+            color: white;
+        }
+
+        .ask-btn:hover {
+            background: #4939ad;
+        }
+
+        .clear-btn {
+            background: #eeeeee;
+            color: #333;
+        }
+
+        .clear-btn:hover {
+            background: #dddddd;
+        }
+
+        .answer-box {
+            margin-top: 25px;
+            background: #f7f7ff;
+            border-left: 5px solid #5b4bc4;
+            padding: 20px;
+            border-radius: 10px;
+            min-height: 100px;
+        }
+
+        .answer-box h3 {
+            color: #5b4bc4;
+            margin-bottom: 12px;
+        }
+
+        #answer {
+            color: #333;
+            line-height: 1.7;
+            white-space: pre-wrap;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #888;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="header">
+            <h1>🤖 EduGenie</h1>
+            <p>Google Gemini Powered Learning Assistant</p>
+        </div>
+
+        <label for="subject">📚 Select Subject</label>
+
+        <select id="subject">
+            <option value="General">General</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Machine Learning">Machine Learning</option>
+            <option value="Artificial Intelligence">Artificial Intelligence</option>
+            <option value="Programming">Programming</option>
+            <option value="Data Structures">Data Structures</option>
+        </select>
+
+        <label for="question">✍️ Ask Your Question</label>
+
+        <input
+            type="text"
+            id="question"
+            placeholder="Example: What is Machine Learning?"
+        >
+
+        <div class="buttons">
+
+            <button class="ask-btn" onclick="askAI()">
+                🤖 Ask AI
+            </button>
+
+            <button class="clear-btn" onclick="clearAnswer()">
+                🧹 Clear
+            </button>
+
+        </div>
+
+        <div class="answer-box">
+
+            <h3>💡 AI Answer</h3>
+
+            <p id="answer">
+                Your answer will appear here...
+            </p>
+
+        </div>
+
+        <div class="footer">
+            Powered by Google Gemini ✨
+        </div>
+
+    </div>
+
+
+    <script>
+
+        async function askAI() {
+
+            const question =
+                document.getElementById("question").value;
+
+            const subject =
+                document.getElementById("subject").value;
+
+            if (question.trim() === "") {
+
+                alert("Please enter a question!");
+
+                return;
+            }
+
+            document.getElementById("answer").innerText =
+                "🤔 Thinking...";
+
+            const fullQuestion =
+                "Subject: " + subject +
+                "\n\nStudent Question: " + question;
+
+            try {
+
+                const response = await fetch(
+                    "/ask?question=" +
+                    encodeURIComponent(fullQuestion)
+                );
+
+                const data = await response.json();
+
+                document.getElementById("answer").innerText =
+                    data.answer;
+
+            } catch (error) {
+
+                document.getElementById("answer").innerText =
+                    "❌ Something went wrong. Please try again.";
+
+            }
+        }
+
+
+        function clearAnswer() {
+
+            document.getElementById("question").value = "";
+
+            document.getElementById("answer").innerText =
+                "Your answer will appear here...";
+
+            document.getElementById("subject").value =
+                "General";
+        }
+
+
+        document.getElementById("question")
+            .addEventListener("keypress", function(event) {
+
+                if (event.key === "Enter") {
+
+                    askAI();
+
+                }
+
+            });
+
+    </script>
+
+</body>
+
+</html>
