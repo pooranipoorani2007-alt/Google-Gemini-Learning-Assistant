@@ -12,7 +12,7 @@ client = genai.Client()
 
 @app.get("/")
 def home():
-    return FileResponse("static/index.html")
+    return FileResponse("index.html")
 
 
 @app.get("/ask")
